@@ -1,0 +1,11 @@
+version: "1.0"
+pipeline:
+  data_preprocessing:
+    step: "Parse Roboflow annotations into YOLO format and apply augmentations."
+  training:
+    command: "yolo task=detect mode=train model=yolov8n.pt data=data.yaml epochs=25 imgsz=640"
+  evaluation:
+    command: "yolo task=detect mode=val model=best.pt data=data.yaml split=test"
+  deployment:
+    build: "docker build -t construction-safety-app ."
+    run: "docker run -p 8000:8000 construction-safety-app"
